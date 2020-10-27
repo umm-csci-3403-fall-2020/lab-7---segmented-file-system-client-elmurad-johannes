@@ -2,11 +2,16 @@ package segmentedfilesystem;
 
 public class FileRetriever {
 
-	public FileRetriever(String server, int port) {
+        private String server;
+        private int port;
+        
+        public FileRetriever(String server, int port) {
         // Save the server and port for use in `downloadFiles()`
-        //...
-	}
+        this.server = server;
+        this.port = port;
 
+        }
+        
 	public void downloadFiles() {
         // Do all the heavy lifting here.
         // This should
