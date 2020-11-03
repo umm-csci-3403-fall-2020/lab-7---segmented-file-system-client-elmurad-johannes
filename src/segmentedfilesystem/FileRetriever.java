@@ -5,6 +5,8 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 // import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class FileRetriever {
 
@@ -31,12 +33,64 @@ public class FileRetriever {
                 // PacketManager.allPacketsReceived() that you could
                 // call for that, but there are a bunch of possible
                 // ways.
-                byte[] data = new byte[256];
+                byte[] initialPacketContent = new byte[256];
                 InetAddress address = InetAddress.getByName(server);
-                DatagramPacket requestFiles = new DatagramPacket(data, data.length, address, port);
+                DatagramPacket requestFiles = new DatagramPacket(initialPacketContent, initialPacketContent.length, address, port);
                 DatagramSocket socket = new DatagramSocket();
                 socket.send(requestFiles);
+
+                // Start receiving packets
+
+                ArrayList<DatagramPacket> files = new ArrayList<>();
+
+
+                HashMap<Integer, ArrayList<DatagramPacket>> map = new HashMap<>();
+
+                // While the server is sending packets, make a new packet and receive that packet.
+                while(!isDone()) {
+                        System.out.println("Receiving new packet");
+                        // Keep enough space for the data section (up to 1024 bytes) and the description (up to 4 bytes)
+                        byte[] packetContents = new byte[1028]; 
+                        DatagramPacket packet = new DatagramPacket(packetContents, packetContents.length);
+                        socket.receive(packet);
+                        
+                        // addToMap(packet, map);
+                }
+                // writeToFile(map); 
+                socket.close();
      
-	}
+        }
+
+
+//     public static void addToMap(DatagramPacket myPacket, HashMap<Integer, ArrayList<DatagramPacket>> map){
+//         byte[] dataByte = myPacket.getData();
+//         int fileID = dataByte[1];
+// 	if (!myFileIDS.contains(fileID)) {
+//             myFileIDS.add(fileID);
+//         }
+//         if(map.containsKey(fileID)) {
+//             if(dataByte[0] % 2 == 0) {
+//                 System.out.println("Found Header Packet");
+//                 map.get(fileID).add(0, myPacket);
+//             } else if (dataByte[0] % 4 == 3) {
+//                 int counter = dataByte[2];
+//                 count.add(counter);
+//                 map.get(fileID).add(1, myPacket);
+//             } else {
+//                 map.get(fileID).add(myPacket);
+//             }
+//         } else {
+//             ArrayList<DatagramPacket> myList = new ArrayList<>();
+//             myList.add(myPacket);
+//             map.put(fileID, myList);
+//         }
+
+//         if (dataByte[0] % 4 == 3) {
+//             int counter = dataByte[2];
+//             count.add(counter);
+//         }
+
+//        lastPackets();
 
 }
+
